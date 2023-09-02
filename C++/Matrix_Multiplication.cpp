@@ -8,12 +8,6 @@
 using namespace std::chrono;
 using namespace std;
 
-//void* is a generic pointer type that can point to any data type
-/*
- when you pass a void* to a function, you usually need to know the
- actual data type it points to within the function, and you may need
- to cast it back to the correct type.
-*/
 
 int main()
 {
