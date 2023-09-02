@@ -58,10 +58,14 @@ int main()
         }
     }
 
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
+
 
     //Write matrices to txt file
     ofstream myfile;
-    myfile.open("matrixMultiplication.txt");
+    myfile.open("matrixMultiplicationB.txt");
     myfile << "Matrix A" << std::endl << std::endl;
      for (int i = 0; i < m; i++) {
         for (int y = 0; y < n; y++) {
@@ -87,12 +91,5 @@ int main()
         }
     myfile << std::endl;
     }
-
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    myfile << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
-    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
-
-    myfile.close();
     return 0;
 }
