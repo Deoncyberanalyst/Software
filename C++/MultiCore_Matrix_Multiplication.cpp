@@ -2,103 +2,126 @@
 #include <time.h>
 #include <cstdlib>
 #include <chrono>
-#include <omp.h>
+#include <pthread.h>
 #include <fstream>
 
 using namespace std::chrono;
 using namespace std;
 
-//void* is a generic pointer type that can point to any data type
-/*
- when you pass a void* to a function, you usually need to know the
- actual data type it points to within the function, and you may need
- to cast it back to the correct type.
-*/
+struct ThreadArgs {
+    int startRow;
+    int endRow;
+};
 
-int main()
-{
+const int m = 400;
+const int n = 400;
+const int p = 300;
+
+int matrixA[m][n];
+int matrixB[n][p];
+int matrixC[m][p];
+
+void* matrixMultiply(void* args) {
+    ThreadArgs* threadArgs = static_cast<ThreadArgs*>(args);
+
+    for (int i = threadArgs->startRow; i < threadArgs->endRow; ++i) {
+        for (int y = 0; y < p; ++y) {
+            for (int k = 0; k < n; ++k) {
+                matrixC[i][y] += matrixA[i][k] * matrixB[k][y];
+            }}}
+
+    return nullptr;
+}
+
+void *initMatrixA(void *arg){   
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+                    matrixA[i][j] = rand() % 100;
+    }}
+    return nullptr;
+}
+
+void *initMatrixB(void *arg){
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < p; ++j) {
+                    matrixB[i][j] = rand() % 100;
+    }}return nullptr;
+}
+
+void *initMatrixC(void *arg){
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < p; ++j) {
+                    matrixC[i][j] = 0;
+    }}return nullptr;
+}
+
+
+int main(){
     auto start = high_resolution_clock::now();
-    int m = 400;
-    int n = 400;
-    int p = 300;
 
     srand(time(0));
+   
+    const int numThreads = 8;
+    const int numMatrices = 3;
     
-    /*
-    To multiply an m×n matrix by an n×p matrix, 
-    the ns must be the same,
-    and the result is an m×p matrix.
-    */
+    pthread_t thread[numThreads];
+
+    pthread_create(&thread[0], nullptr, initMatrixA, nullptr);
+    pthread_create(&thread[1], nullptr, initMatrixB, nullptr);
+    pthread_create(&thread[2], nullptr, initMatrixC, nullptr);
+
+    for (int i = 0; i < 3; i++)
+    {
+        pthread_join(thread[i],nullptr);
+    }
     
-    int matrixA[m][n] = {{0}};
-    int matrixB[n][p] = {{0}};
-    int matrixC[m][p] = {{0}};
+    //Allocate x rows per thread
+    ThreadArgs threadArgs[numThreads];
+    int rowsPerThread = m / numThreads;
 
-    //populate Matrix A
-    for (int i = 0; i < m; i++){
-        for (int y = 0; y < n; y++){
-            matrixA[i][y] = (rand() % 100) ;
-        }
+    for (int i = 0; i < numThreads; ++i) {
+        threadArgs[i].startRow = i * rowsPerThread;
+        threadArgs[i].endRow = (i == numThreads - 1) ? m : (i + 1) * rowsPerThread;
+        pthread_create(&thread[i], nullptr, matrixMultiply, &threadArgs[i]);
     }
 
-    //populate Matrix B
-     for (int i = 0; i < n; i++){
-        for (int y = 0; y < p; y++){
-            matrixB[i][y] = (rand() % 100);
-        }
+     for (int i = 0; i < 8; i++){
+        pthread_join(thread[i], nullptr);
     }
-
-    //Setting values to 0 to avoid garbage values in Matrix C
-    for (int i = 0; i < m; i++){
-        for (int y = 0; y < p; y++){
-            matrixC[i][y] = 0;
-        }
-    }
-
-
-    for (int i = 0; i < m; i++) {
-        for (int y = 0; y < p; y++) {
-            for (int k = 0; k < n; k++) {
-                matrixC[i][y] += matrixA[i][k] * matrixB[k][y];
-            }
-        }
-    }
-
+    
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by function: " << duration.count() << " microseconds" << endl;
 
     //Write matrices to txt file
     ofstream myfile;
-    myfile.open("matrixMultiplication.txt");
-    myfile << "Matrix A" << std::endl << std::endl;
+    myfile.open("AA.txt");
+
+    myfile << "Matrix A" << endl << endl;
      for (int i = 0; i < m; i++) {
         for (int y = 0; y < n; y++) {
             myfile << matrixA[i][y] << ",";
         }
-        myfile << std::endl;
+        myfile << endl;
     }
 
-    myfile << "Matrix B" << std::endl;
+    myfile << "Matrix B" << endl;
      //print Matrix B
      for (int i = 0; i < n; i++) {
         for (int y = 0; y < p; y++) {
             myfile << matrixB[i][y] << ",";
         }
-        myfile << std::endl;
+        myfile << endl;
     }
 
-    myfile << "Matrix C" << std::endl;
+    myfile << "Matrix C" << endl;
      //print Matrix C
     for (int i = 0; i < m; i++) {
         for (int y = 0; y < p; y++) {
             myfile << matrixC[i][y] << ",";
         }
-    myfile << std::endl;
+    myfile << endl;
     }
 
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    myfile << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
-    std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
-
-    myfile.close();
     return 0;
 }
