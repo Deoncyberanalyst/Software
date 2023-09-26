@@ -62,7 +62,7 @@ void initValues(void *args)
 int main(){
     auto start = std::chrono::high_resolution_clock::now();
     srand(time(0));
-    const int ARRAY_SIZE = 1000000;
+    const int ARRAY_SIZE = 100;
 
     listArgs args;
     int *items = new int[ARRAY_SIZE];
@@ -82,5 +82,7 @@ int main(){
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << "Time taken by function: " << duration.count() << " microseconds" << std::endl;
     //for (int i = 0; i < ARRAY_SIZE; i++) std::cout << i+1 << ". " << items[i] << std::endl;
+
+    delete[] items;
     return 0;
 }
