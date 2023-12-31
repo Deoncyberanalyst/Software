@@ -1,0 +1,15 @@
+
+{
+  "name": "MOUNTAIN DATA",
+  
+  "highest peaks": [
+    "Mount Everest",
+    "K2",
+    "Kanjan"
+  ],
+  "lowest points": [
+    "Dead zone",
+    "cricket",
+    "dead area!"
+  ]
+}

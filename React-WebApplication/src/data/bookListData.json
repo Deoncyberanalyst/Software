@@ -1,0 +1,30 @@
+{
+  "name": "BOOK DATA",
+  
+  "books": [
+    {
+      "id": 1,
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "publicationYear": 1960,
+      "genre": "Fiction",
+      "isbn": "9780061120084"
+    },
+    {
+      "id": 2,
+      "title": "1984",
+      "author": "George Orwell",
+      "publicationYear": 1949,
+      "genre": "Dystopian",
+      "isbn": "9780451524935"
+    },
+    {
+      "id": 3,
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "publicationYear": 1813,
+      "genre": "Classic",
+      "isbn": "9780141439518"
+    }
+  ]
+}

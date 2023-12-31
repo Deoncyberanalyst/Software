@@ -1,35 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import ListCast from './components/ListCast';
-import Modals from './components/Modals';
-import Nav from './components/Nav';
-import "./App.scss";
+//git pull --all && npm start
+//$ git pull --all && npm start
+// hands-on-react@0.0.0 start
+//vite
+import React, { Component } from 'react'
+import Welcome from './components/Welcome'
+import Support from './components/Support'
+import ViewData from './components/ViewData'
 
 function App() {
-  const [cast, setCast] = useState([]);
-  let [memberInfo, setMemberInfo] = useState(null);
-
-  async function fetchCast() {
-    const response = await fetch('cast.json');
-    setCast(await response.json());
-  }
-
-  useEffect(() => {
-    fetchCast();
-  });
-
+  
   return (
-    <>
-      <Nav cast={cast} onChoice={(info) => { setMemberInfo(info) }} />
-      <div className="container">
-        <hgroup>
-          <img src="images/group.svg" alt="StarGazers Group" />
-          <h1>Meet the Stargazers</h1>
-          <p>Members of an <b>intergalactic alliance</b> paving the way for peace and benevolence among all species. They are known for their enthusiasm for science, for their love of fun, and their dedication to education.</p>
-          <ListCast cast={cast} onChoice={(info) => { setMemberInfo(info) }} />
-          {memberInfo && <Modals member={memberInfo} handleChange={(info) => { setMemberInfo(cast[info]) }} handleClose={() => { setMemberInfo(null) }} />}
-        </hgroup>
-      </div>
-    </>
+    <hgroup>
+      <Welcome name="to me!"/>
+      <ViewData toolName="Mountain Data" data="highest peaks"/>
+      <ViewData toolName="Mountain Data" data="lowest points"/>
+      <ViewData toolName="Customer Data" data="name"/>
+      <ViewData toolName="Customer Data" data="customers"/>
+
+      <ViewData toolName="Book data" data="name"/>
+      <ViewData toolName="Book data" data="books"/>
+
+      <ViewData toolName="Test Data" data="lowest points"/>
+      <ViewData toolName="new data" data="customers"/>
+      <button className="outline" onClick={()=> alert("Hi there")}>Click me</button>
+
+     <Support />
+    </hgroup>
   )
 }
 export default App

@@ -1,0 +1,27 @@
+{
+  "name": "CUSTOMER DATA",
+
+  "customers": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "address": "123 Main Street, Cityville, CA",
+      "phone": "555-1234"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "address": "456 Oak Avenue, Townsville, NY",
+      "phone": "555-5678"
+    },
+    {
+      "id": 20,
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com",
+      "address": "789 Pine Road, Villagetown, TX",
+      "phone": "555-9876"
+    }
+  ]
+}
