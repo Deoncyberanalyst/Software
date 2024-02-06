@@ -1,3 +1,10 @@
+/*
+This C code attempts to interact with the Windows Clipboard, initially printing a message indicating an attempt to open it. 
+If successful, it retrieves text data from the Clipboard and prints it. The code then calls a function named sendHTTP with the retrieved data as an argument, 
+although the HTTP sending functionality is not  implemented. 
+Overall, the code is a demonstration of interacting with the Windows Clipboard in C and intending to send the retrieved data over HTTP.
+*/
+
 #include <stdio.h>
 #include <windows.h>
 
