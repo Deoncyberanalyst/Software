@@ -1,0 +1,23 @@
+{
+  "websites": [
+    {
+      "websiteName": "Enter Website Name",
+      "searchClassName": "Enter Class Name!",
+      "searchIdName": "",
+      "url": [
+        "Enter Website",
+        "Enter Website!"
+      ]
+    },
+
+    {
+      "websiteName": "Enter Website Name",
+      "searchClassName": "",
+      "searchIdName": "Enter searchID Name",
+      "url": [
+        "Enter Website",
+        "Enter Website!"
+      ]
+    }
+  ]
+}
