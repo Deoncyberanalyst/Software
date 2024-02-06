@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from colorama import Fore, Back, Style  
-import sharedServices
+import sharedFunctions
 
 WEBSITES_CONFIG = 'websitesConfig.json'
 
@@ -22,7 +22,7 @@ class SeleniumObjectModel:
 
 
     def initiate(self):
-        dataList = sharedServices.loadJson(WEBSITES_CONFIG)
+        dataList = sharedFunctions.loadJson(WEBSITES_CONFIG)
         dataList = dataList['websites']
         
         for websites in dataList:
