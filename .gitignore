@@ -1,5 +1,6 @@
 C++/.vscode/settings.json
 C++/.vscode/tasks.json
+/__pycache__
 *.exe
 *.docx
 *.xlsx
