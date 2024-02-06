@@ -2,3 +2,6 @@ C++/.vscode/settings.json
 C++/.vscode/tasks.json
 *.exe
 *.docx
+*.xlsx
+Plan.xlsx
+websitesConfig.json
