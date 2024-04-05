@@ -6,3 +6,9 @@ __pycache__/
 *.xlsx
 Plan.xlsx
 websitesConfig.json
+/.vs/Software/FileContentIndex
+/.vs/Software/v17
+/.vs
+/.vscode
+/Security Research and Demonstrations/Custom_DLL_Injector/x64/Debug
+/Security Research and Demonstrations/Custom_DLL_Injector/.vs/Custom_DLL-Injector
