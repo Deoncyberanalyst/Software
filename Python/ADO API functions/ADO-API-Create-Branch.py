@@ -16,7 +16,6 @@ def get_base_branch_id(url, headers, base_branch):
 
 if __name__ == "__main__":
     organization = ""
-    organization = ""
     project = ""
     repository = ""
     new_branch_name = ""
