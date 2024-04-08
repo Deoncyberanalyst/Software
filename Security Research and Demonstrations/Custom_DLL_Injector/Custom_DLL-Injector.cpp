@@ -44,6 +44,7 @@ static void openTargetProcess(DWORD targetProcessID, const char* data)
             BOOL result = WriteProcessMemory(processHandle, baseAddress, data, sizeof(data), 0);
             if (result != 0) {
                 cout << "Memory written successfully\n";
+                cout << baseAddress << endl;
 
             } else cout << "Failed to write memory\n";
         } else cout << "Failed to allocate memory\n";
@@ -57,7 +58,7 @@ static void openTargetProcess(DWORD targetProcessID, const char* data)
 int main()
 {
     const char* processName = "notepad++.exe";
-    const char* data = "ENTER DLL";
+    const char* data = "RAZOR";
     DWORD targetProcessID;
 
     do {
