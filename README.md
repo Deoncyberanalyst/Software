@@ -2,7 +2,7 @@
 This repository contains a collection of projects I've developed to showcase my skills and experience in various programming languages and technologies. Each project demonstrates my ability to design, implement, and test software solutions.
 Project Categories:
 - **C#**: This folder includes various C# projects, ranging from a simple digital clock to a fully functional banking system console application. You'll also find projects demonstrating my understanding of object-oriented programming principles, design patterns, and error handling.
--** C++**: The C++ section highlights my experience with distributed computing, interrupt service routines using Arduino architecture, and multithreading concepts.
+- **C++**: The C++ section highlights my experience with distributed computing, interrupt service routines using Arduino architecture, and multithreading concepts.
 - **Java**: This folder contains a project related to cricket player statistics, built using Java.
 - **Python**: The Python section showcases projects involving ADO API functions, data analytics using Twitter data, a mock DNS server implementation, an auto clicker, a job scraper utilizing Selenium, and various sorting algorithms.
 - **React-WebApplication**: This folder comprises a React web application demonstrating my front-end development skills using React libraries and components.
