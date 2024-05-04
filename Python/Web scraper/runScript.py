@@ -1,14 +1,14 @@
-import time
 import webDriver
 import argsParser
 
 def main():
     
-    headless  = argsParser.initiateArgParser()
-    webDriver1 = webDriver.SeleniumObjectModel(headless=headless)
+    headless = argsParser.initiateArgParser()
+    webDriver1 = webDriver.SeleniumObjectModel(headless)
     webDriver1.initiate()
     
-    end = input("")
+    input("")
     
 if __name__ == "__main__":
     main()
+
