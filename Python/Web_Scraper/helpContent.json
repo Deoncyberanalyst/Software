@@ -1,0 +1,10 @@
+{
+    "help_program_name": "Job Productivity Tool",
+    "help_program_description": "This Python program streamlines the process of job hunting by automating the task of checking for job vacancies on prominent websites.",
+    "run_head": "Running with head",
+    "run_headless": "Running without head",
+    "help_headless": "Use flag to run program without the Chrome Driver.",
+    "help_head": "Use flag to run program WITH the Chrome Driver. Default option is without the head.",
+    "help_custom":  "Use flag to run test search",
+    "help_silent":  "Use flag to turn off CLI comments."
+}
