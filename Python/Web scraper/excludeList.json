@@ -1,8 +1,0 @@
-{
-    "excludedItems": [
-      {
-        "name": "Temporary Employment Register",
-        "matchExpression": "contains"
-      }
-    ]
-  }
