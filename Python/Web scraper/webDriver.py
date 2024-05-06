@@ -5,7 +5,7 @@ from colorama import Fore, Style
 import sharedFunctions
 import re
 
-WEBSITES_CONFIG = 'websitesConfig.json'
+CONFIG = 'Config.json'
 
 class SeleniumObjectModel:
     def __init__(self, headless):
@@ -21,7 +21,7 @@ class SeleniumObjectModel:
 
 
     def initiate(self):
-        websitesConfigJson = sharedFunctions.loadJson(WEBSITES_CONFIG)
+        websitesConfigJson = sharedFunctions.loadJson(CONFIG)
         print()
         
         for i in websitesConfigJson['websites']:

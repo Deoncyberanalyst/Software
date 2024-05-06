@@ -1,0 +1,35 @@
+{
+  "websites": [
+    {
+      "websiteName": "",
+      "searchBy": "xPath",
+      "searchValue": "",
+      "excludeItemsRegex": [""],
+      "urls": [
+        ""
+      ]
+    },
+
+    {
+      "websiteName": "",
+      "searchBy": "ID",
+      "searchValue": "",
+      "excludeItemsRegex": [""],
+      "urls": [
+        ""
+      ]
+    },
+
+    {
+      "websiteName": "",
+      "searchBy": "className",
+      "searchValue": "",
+      "excludeItemsRegex": [],
+      "urls": [
+        ""
+      ]
+    }
+  ],
+
+  "globalExclude":[""]
+}

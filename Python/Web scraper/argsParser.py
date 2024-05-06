@@ -24,10 +24,7 @@ def initiateArgParser():
 
     else:
         headless = False
-        printText(config['run_head'], silentCondition)
-  
-    data = sharedFunctions.loadJson("websitesConfig.json")
- 
+        printText(config['run_head'], silentCondition) 
        
     return headless
     
