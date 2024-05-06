@@ -5,7 +5,7 @@ from colorama import Fore, Style
 import sharedFunctions
 import re
 
-CONFIG = 'Config.json'
+CONFIG = 'config.json'
 
 class SeleniumObjectModel:
     def __init__(self, headless):
