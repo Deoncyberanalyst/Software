@@ -5,7 +5,10 @@ import sys
 from pynput import mouse, keyboard
 import threading
 
+pos = None
 stop_event = threading.Event()
+pause_event = threading.Event()
+
 
 def randoMovement(sleepTime):
 	pyautogui.keyDown('right')
@@ -18,52 +21,71 @@ def normal_click(sleepTime):
 	pyautogui.leftClick()
 
 
-def click(mouseX,mouseY):
+
+def click():
 	i=0
-	while not stop_event.is_set() and i < max:
-		pyautogui.moveTo(mouseX,mouseY)
-		sleepTime = random.uniform(1.8,2)
-		print(f"Clicking in: {sleepTime} seconds")
-		time.sleep(sleepTime)
-		
-		randVariation = random.randrange(0,30)
-		if (randVariation==0): 
-			randoMovement(sleepTime)
+	while i < max:
+
+		pause_event.wait()
+		if stop_event.is_set(): break
+
+		if pos is not None:
+			mouseX, mouseY = pos
+			x_center = mouseX
+			y_center = mouseY
+
+			sleepTime = random.uniform(1.6,1.9)
+			
+			
+			randVariation = random.randrange(0,30)
+			pyautogui.moveTo(x_center,y_center,duration=random.uniform(0.1,0.3))
+
+			print(f"Clicking in: {sleepTime} seconds")
+			time.sleep(sleepTime)
+			if (randVariation==0): 
+				randoMovement(sleepTime)
+				normal_click(sleepTime)
+
+			elif (randVariation%2==0):
+				pyautogui.moveRel(random.randint(-10,10), random.randint(-10,10))
+				normal_click(sleepTime)
+			else:
+				i+=1
+				normal_click(sleepTime)
+				print(f"Iterations remaining: {round(max-i)}\n")
 		else:
-			i+=1
-			normal_click(sleepTime)
-			print(f"Iterations remaining: {round(max-i)}\n")
-	pyautogui.alert('Script ended')
-
-
-def get_mouse_pos():
-    print("Press 'x' to set mouse position!")
-
-    mouse_controller = mouse.Controller()
-
-    def on_press(key):
-            if key.char == 'x':
-                pos = mouse_controller.position
-                print(f"Mouse position set to: {pos}")
-                return False  # Stop the listener
-
-    # Start listening to keyboard
-    with keyboard.Listener(on_press=on_press) as listener:
-        listener.join()
-    return mouse_controller.position
+			print("Mouse position not set. Press 'x' to set the mouse position.")
+			time.sleep(1)
 
 def listen_keys():
 	print("Press 'z' to cancel the script.")
+	global pos  # Declare pos as global in the outer function (optional here)
+	mouse_controller = mouse.Controller()
 
 	def on_press(key):
-				if key.char == 'z':
-					print("Script cancelled.")
-					stop_event.set() 
-					return False
+		global pos  # Add this line to update the global pos variable
+		try:
+			if key.char == 'z':
+				print("Script cancelled.")
+				stop_event.set() 
+				return False
+			elif key.char == 'p':
+				if pause_event.is_set():
+					pause_event.clear()	
+					print("Resumed. Press 'p' to pause.")
+				else:
+					pause_event.set()
+					print("Paused. Press 'p' to resume.")
+			elif key.char == 'x':
+				pos = mouse_controller.position
+				print(f"Mouse position: {pos}")
+				pause_event.set()
+		except AttributeError:
+			pass
 
-		# Start listening to keyboard
 	with keyboard.Listener(on_press=on_press) as listener:
 		listener.join()
+
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1:
@@ -75,11 +97,10 @@ if __name__ == '__main__':
 		sys.exit(1)
 
 	thread = threading.Thread(target=listen_keys)
-	mouseX,mouseY = get_mouse_pos()  # Get it first
-	thread2 = threading.Thread(target=click, args=(mouseX,mouseY))
-	thread2.start()
+	thread2 = threading.Thread(target=click)
 
 	thread.start()
+	thread2.start()
 
 	if stop_event.is_set():
 		thread.join()
